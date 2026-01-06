@@ -387,3 +387,34 @@ func TestWalkerExcludePatterns(t *testing.T) {
 		})
 	}
 }
+
+func TestWalkerAddExcludePattern(t *testing.T) {
+	walker := NewWalker("/tmp", 4)
+	walker.AddExcludePattern("*.log")
+	if len(walker.excludePatterns) != 1 || walker.excludePatterns[0] != "*.log" {
+		t.Errorf("AddExcludePattern failed, got %v", walker.excludePatterns)
+	}
+}
+
+func TestWalkerSkippedCount(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "walker-test")
+	if err != nil {
+		t.Fatalf("Failed to create temp dir: %v", err)
+	}
+	defer os.RemoveAll(tmpDir)
+
+	// Create a binary file and an unsupported file
+	os.WriteFile(filepath.Join(tmpDir, "image.png"), []byte{0}, 0644)
+	os.WriteFile(filepath.Join(tmpDir, "data.unknown"), []byte{0}, 0644)
+	os.WriteFile(filepath.Join(tmpDir, "main.go"), []byte("package main"), 0644)
+
+	walker := NewWalker(tmpDir, 2)
+	walker.Walk()
+
+	if walker.GetSkippedCount() != 2 {
+		t.Errorf("Expected 2 skipped files, got %d", walker.GetSkippedCount())
+	}
+	if walker.GetProcessedCount() != 1 {
+		t.Errorf("Expected 1 processed file, got %d", walker.GetProcessedCount())
+	}
+}

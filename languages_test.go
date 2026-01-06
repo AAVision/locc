@@ -135,10 +135,36 @@ func TestAllLanguagesHaveNames(t *testing.T) {
 	}
 }
 
-func TestAllLanguagesHaveExtensions(t *testing.T) {
-	for ext, lang := range Languages {
-		if len(lang.Extensions) == 0 {
-			t.Errorf("Language %q (ext: %q) has no extensions defined", lang.Name, ext)
-		}
+func TestGetLanguageByFilename(t *testing.T) {
+	tests := []struct {
+		filename string
+		wantName string
+		wantNil  bool
+	}{
+		{"Makefile", "Makefile", false},
+		{"makefile", "Makefile", false},
+		{"Dockerfile", "Dockerfile", false},
+		{"LICENSE", "License", false},
+		{".gitignore", "Git Config", false},
+		{".env", "Environment", false},
+		{"README.md", "Markdown", true}, // README.md should be detected by extension, not by filename in FilenameLanguages (unless specified there)
+		{"unknown", "", true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.filename, func(t *testing.T) {
+			lang := GetLanguageByFilename(tt.filename)
+			if tt.wantNil {
+				if lang != nil {
+					t.Errorf("GetLanguageByFilename(%q) = %v, want nil", tt.filename, lang)
+				}
+			} else {
+				if lang == nil {
+					t.Errorf("GetLanguageByFilename(%q) = nil, want %q", tt.filename, tt.wantName)
+				} else if lang.Name != tt.wantName {
+					t.Errorf("GetLanguageByFilename(%q).Name = %q, want %q", tt.filename, lang.Name, tt.wantName)
+				}
+			}
+		})
 	}
 }

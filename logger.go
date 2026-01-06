@@ -123,6 +123,18 @@ func SetLogLevel(level LogLevel) {
 	defaultLogger.SetLevel(level)
 }
 
+// SetLogOutput sets the output writer for the default logger
+func SetLogOutput(out io.Writer) {
+	defaultLogger.SetOutput(out)
+}
+
+// SetLogErrorOutput sets the error output writer for the default logger
+func SetLogErrorOutput(errOut io.Writer) {
+	defaultLogger.mu.Lock()
+	defer defaultLogger.mu.Unlock()
+	defaultLogger.errorLog.SetOutput(errOut)
+}
+
 // LogDebug logs a debug message using the default logger
 func LogDebug(format string, args ...interface{}) {
 	defaultLogger.Debug(format, args...)

@@ -31,7 +31,14 @@ type Config struct {
 
 func main() {
 	config := parseFlags()
+	if err := Run(config); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+}
 
+// Run executes the application logic with the given configuration
+func Run(config *Config) error {
 	if config.Verbose {
 		SetLogLevel(LogLevelDebug)
 	} else if config.Quiet {
@@ -45,8 +52,7 @@ func main() {
 
 	info, err := os.Stat(config.Path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return err
 	}
 
 	// Start timing
@@ -132,6 +138,8 @@ func main() {
 	if !config.Quiet {
 		fmt.Printf("Time elapsed: %v\n", elapsed.Round(time.Millisecond))
 	}
+
+	return nil
 }
 
 func parseFlags() *Config {
