@@ -5,9 +5,12 @@
 ## Features
 
 - **Blazing Fast**: Uses a worker pool to process files concurrently.
+- **Highly Accurate**: Advanced character-by-character scanner correctly handles comment markers inside string literals and escaped characters.
 - **Detailed Statistics**: Categorizes lines into Code, Comments, and Blank lines.
 - **Extensive Language Support**: Supports over 40 programming languages.
+- **Nested Comments**: Correctly handles nested multi-line comments for supported languages (e.g., Rust, Swift).
 - **Flexible Exclusions**: Exclude directories by name or files/directories by glob patterns.
+- **Single File Support**: Analyze individual files or entire directories.
 - **Multiple Output Formats**: Supports default table, JSON, compact summary, and formatted table outputs.
 - **Hidden File Support**: Optionally include hidden files and directories in the count.
 
@@ -35,7 +38,7 @@ locc [options] [path]
 
 ### Options
 
-- `-p, --path <path>`: Path to the directory to analyze (default: current directory).
+- `-p, --path <path>`: Path to the directory or file to analyze (default: current directory).
 - `-w, --workers <n>`: Number of worker goroutines (default: number of CPUs).
 - `-H, --hidden`: Include hidden files and directories.
 - `-f, --format <format>`: Output format: `default`, `json`, `compact`, `formatted`.
@@ -55,6 +58,9 @@ locc
 
 # Count LOC in specified directory
 locc /path/to/project
+
+# Count LOC for a single file
+locc main.go
 
 # Output results in JSON format
 locc -f json .
