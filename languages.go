@@ -417,6 +417,27 @@ var Languages = map[string]*Language{
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
 	},
+	".s": {
+		Name:              "Assembly",
+		Extensions:        []string{".s", ".S", ".asm"},
+		SingleLineComment: ";",
+		MultiLineStart:    "/*",
+		MultiLineEnd:      "*/",
+	},
+	".S": {
+		Name:              "Assembly",
+		Extensions:        []string{".s", ".S", ".asm"},
+		SingleLineComment: ";",
+		MultiLineStart:    "/*",
+		MultiLineEnd:      "*/",
+	},
+	".asm": {
+		Name:              "Assembly",
+		Extensions:        []string{".s", ".S", ".asm"},
+		SingleLineComment: ";",
+		MultiLineStart:    "/*",
+		MultiLineEnd:      "*/",
+	},
 }
 
 // BinaryExtensions contains file extensions that should be skipped

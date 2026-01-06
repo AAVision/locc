@@ -145,6 +145,26 @@ exit 0
 			wantCode:    2,
 			wantTotal:   6,
 		},
+		{
+			name:     "Assembly file",
+			filename: "test.asm",
+			content: `; Assembly example
+section .text
+    global _start
+
+_start:
+    mov eax, 4      ; sys_write
+    mov ebx, 1      ; stdout
+    /* multi-line
+       comment */
+    int 0x80
+`,
+			lang:        Languages[".asm"],
+			wantBlank:   1,
+			wantComment: 3,
+			wantCode:    6,
+			wantTotal:   10,
+		},
 	}
 
 	for _, tt := range tests {

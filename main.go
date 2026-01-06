@@ -224,7 +224,8 @@ Supported Languages:
   Go, JavaScript, TypeScript, Python, Java, C, C++, C#, Ruby, PHP,
   Swift, Kotlin, Rust, Scala, HTML, CSS, SCSS, SQL, Shell, YAML,
   JSON, Markdown, XML, Vue, Svelte, Lua, R, Perl, Elixir, Erlang,
-  Haskell, Clojure, TOML, INI, Terraform, Protocol Buffers, GraphQL
+  Haskell, Clojure, TOML, INI, Terraform, Protocol Buffers, GraphQL,
+  Assembly
 
 `, AppName, AppName, AppName, AppName, AppName, AppName, AppName, AppName)
 }
