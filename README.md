@@ -1,6 +1,6 @@
-# count-loc
+# locc
 
-`count-loc` is a fast and efficient Lines of Code (LOC) counter written in Go. It traverses directories concurrently and provides detailed statistics about code, comments, and blank lines across many programming languages.
+`locc` is a fast and efficient Lines of Code (LOC) counter written in Go. It traverses directories concurrently and provides detailed statistics about code, comments, and blank lines across many programming languages.
 
 ## Features
 
@@ -13,24 +13,24 @@
 
 ## Installation
 
-To install `count-loc`, you need to have Go installed on your system.
+To install `locc`, you need to have Go installed on your system.
 
 ```bash
-go install github.com/knbr13/count-loc@latest
+go install github.com/knbr13/locc@latest
 ```
 
 Alternatively, you can clone the repository and build it manually:
 
 ```bash
-git clone https://github.com/knbr13/count-loc.git
-cd count-loc
-go build -o count-loc .
+git clone https://github.com/knbr13/locc.git
+cd locc
+go build -o locc .
 ```
 
 ## Usage
 
 ```bash
-count-loc [options] [path]
+locc [options] [path]
 ```
 
 ### Options
@@ -51,26 +51,26 @@ count-loc [options] [path]
 
 ```bash
 # Count LOC in current directory
-count-loc
+locc
 
 # Count LOC in specified directory
-count-loc /path/to/project
+locc /path/to/project
 
 # Output results in JSON format
-count-loc -f json .
+locc -f json .
 
 # Use 8 workers and include hidden files
-count-loc -w 8 -H .
+locc -w 8 -H .
 
 # Exclude test and docs directories
-count-loc -x "test,docs" .
+locc -x "test,docs" .
 
 # Exclude files matching patterns
-count-loc -i "users_*.go,*log" .
+locc -i "users_*.go,*log" .
 ```
 
 ## Supported Languages
 
-`count-loc` supports a wide range of languages, including:
+`locc` supports a wide range of languages, including:
 
 Go, JavaScript, TypeScript, Python, Java, C, C++, C#, Ruby, PHP, Swift, Kotlin, Rust, Scala, HTML, CSS, SCSS, SQL, Shell, YAML, JSON, Markdown, XML, Vue, Svelte, Lua, R, Perl, Elixir, Erlang, Haskell, Clojure, TOML, INI, Terraform, Protocol Buffers, GraphQL, Assembly, and more.

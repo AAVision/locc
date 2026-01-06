@@ -8,7 +8,7 @@ import (
 
 func TestCountLines(t *testing.T) {
 	// Create a temporary directory for test files
-	tmpDir, err := os.MkdirTemp("", "count-loc-test")
+	tmpDir, err := os.MkdirTemp("", "locc-test")
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
@@ -200,7 +200,7 @@ _start:
 }
 
 func TestCountLinesGeneric(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "count-loc-test")
+	tmpDir, err := os.MkdirTemp("", "locc-test")
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}

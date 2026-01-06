@@ -10,7 +10,7 @@ import (
 
 // Version information
 const (
-	AppName    = "count-loc"
+	AppName    = "locc"
 	AppVersion = "1.0.0"
 )
 
