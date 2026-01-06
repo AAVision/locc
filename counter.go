@@ -48,75 +48,120 @@ func CountLines(filePath string, lang *Language) (*FileStats, error) {
 	}
 
 	scanner := bufio.NewScanner(file)
-	// Increase buffer size for files with very long lines
 	buf := make([]byte, 0, 64*1024)
 	scanner.Buffer(buf, 1024*1024)
 
-	inMultiLineComment := false
+	inMultiLine := false
+	multiLineLevel := 0
+	inString := false
+	stringEnd := ""
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		trimmedLine := strings.TrimSpace(line)
 		stats.TotalLines++
 
-		// Check for blank lines
-		if trimmedLine == "" {
-			stats.BlankLines++
-			continue
-		}
+		lineHasCode := false
+		lineHasComment := false
 
-		// Handle multi-line comments
-		if lang.MultiLineStart != "" && lang.MultiLineEnd != "" {
-			if inMultiLineComment {
-				stats.CommentLines++
-				if strings.Contains(trimmedLine, lang.MultiLineEnd) {
-					inMultiLineComment = false
-				}
-				continue
-			}
-
-			// Check if line starts a multi-line comment
-			if strings.HasPrefix(trimmedLine, lang.MultiLineStart) {
-				stats.CommentLines++
-				// Check if it also ends on the same line
-				if !strings.HasSuffix(trimmedLine, lang.MultiLineEnd) ||
-					(lang.MultiLineStart == lang.MultiLineEnd && strings.Count(trimmedLine, lang.MultiLineStart) == 1) {
-					// For languages like Python where start and end are the same (""")
-					if lang.MultiLineStart == lang.MultiLineEnd {
-						count := strings.Count(trimmedLine, lang.MultiLineStart)
-						if count == 1 || count%2 == 1 {
-							inMultiLineComment = true
+		for i := 0; i < len(line); {
+			if inString {
+				lineHasCode = true
+				if strings.HasPrefix(line[i:], stringEnd) {
+					// Check if escaped
+					escaped := false
+					if i > 0 && line[i-1] == '\\' {
+						bsCount := 0
+						for j := i - 1; j >= 0 && line[j] == '\\'; j-- {
+							bsCount++
 						}
-					} else if !strings.Contains(trimmedLine[len(lang.MultiLineStart):], lang.MultiLineEnd) {
-						inMultiLineComment = true
+						if bsCount%2 == 1 {
+							escaped = true
+						}
 					}
-				}
-				continue
-			}
-
-			// Check if line contains multi-line comment start somewhere in the middle
-			if strings.Contains(trimmedLine, lang.MultiLineStart) {
-				// Line has code before the comment start
-				if strings.Contains(trimmedLine, lang.MultiLineEnd) {
-					// Comment is contained within the line, count as code
-					stats.CodeLines++
+					if !escaped {
+						inString = false
+						i += len(stringEnd)
+					} else {
+						i++
+					}
 				} else {
-					// Multi-line comment starts but doesn't end
-					stats.CodeLines++
-					inMultiLineComment = true
+					i++
 				}
 				continue
 			}
+
+			if inMultiLine {
+				lineHasComment = true
+
+				// Check for nested multi-line start
+				if lang.NestedComments && lang.MultiLineStart != "" && strings.HasPrefix(line[i:], lang.MultiLineStart) {
+					multiLineLevel++
+					i += len(lang.MultiLineStart)
+					continue
+				}
+
+				// Check for multi-line end
+				if lang.MultiLineEnd != "" && strings.HasPrefix(line[i:], lang.MultiLineEnd) {
+					if multiLineLevel > 0 {
+						multiLineLevel--
+						i += len(lang.MultiLineEnd)
+					} else {
+						inMultiLine = false
+						i += len(lang.MultiLineEnd)
+					}
+				} else {
+					i++
+				}
+				continue
+			}
+
+			// Not in string or multi-line comment
+
+			// Check for single line comment
+			if lang.SingleLineComment != "" && strings.HasPrefix(line[i:], lang.SingleLineComment) {
+				lineHasComment = true
+				break // Rest of line is comment
+			}
+
+			// Check for multi-line comment start
+			if lang.MultiLineStart != "" && strings.HasPrefix(line[i:], lang.MultiLineStart) {
+				inMultiLine = true
+				lineHasComment = true
+				i += len(lang.MultiLineStart)
+				continue
+			}
+
+			// Check for string start
+			foundString := false
+			for _, delim := range lang.StringDelimiters {
+				if strings.HasPrefix(line[i:], delim) {
+					inString = true
+					stringEnd = delim
+					lineHasCode = true
+					i += len(delim)
+					foundString = true
+					break
+				}
+			}
+			if foundString {
+				continue
+			}
+
+			// Check for code
+			if !isWhitespace(line[i]) {
+				lineHasCode = true
+			}
+			i++
 		}
 
-		// Handle single-line comments
-		if lang.SingleLineComment != "" && strings.HasPrefix(trimmedLine, lang.SingleLineComment) {
+		if lineHasCode {
+			stats.CodeLines++
+		} else if lineHasComment {
 			stats.CommentLines++
-			continue
+		} else if stats.TotalLines > 0 { // Should always be true here
+			// Check if it's truly blank or just whitespace
+			stats.BlankLines++
 		}
-
-		// Everything else is code
-		stats.CodeLines++
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -124,6 +169,10 @@ func CountLines(filePath string, lang *Language) (*FileStats, error) {
 	}
 
 	return stats, nil
+}
+
+func isWhitespace(c byte) bool {
+	return c == ' ' || c == '\t' || c == '\n' || c == '\r'
 }
 
 // CountLinesGeneric counts lines for files without specific language support

@@ -7,6 +7,8 @@ type Language struct {
 	SingleLineComment string
 	MultiLineStart    string
 	MultiLineEnd      string
+	StringDelimiters  []string
+	NestedComments    bool
 }
 
 // Languages defines all supported programming languages and their comment patterns
@@ -17,6 +19,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "`"},
 	},
 	".js": {
 		Name:              "JavaScript",
@@ -24,6 +27,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'", "`"},
 	},
 	".ts": {
 		Name:              "TypeScript",
@@ -31,6 +35,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'", "`"},
 	},
 	".tsx": {
 		Name:              "TypeScript JSX",
@@ -66,6 +71,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "#",
 		MultiLineStart:    `"""`,
 		MultiLineEnd:      `"""`,
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".rb": {
 		Name:              "Ruby",
@@ -73,6 +79,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "#",
 		MultiLineStart:    "=begin",
 		MultiLineEnd:      "=end",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".java": {
 		Name:              "Java",
@@ -80,6 +87,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".c": {
 		Name:              "C",
@@ -87,6 +95,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".h": {
 		Name:              "C Header",
@@ -94,6 +103,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".cpp": {
 		Name:              "C++",
@@ -101,6 +111,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".cc": {
 		Name:              "C++",
@@ -108,6 +119,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".hpp": {
 		Name:              "C++ Header",
@@ -115,6 +127,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".cs": {
 		Name:              "C#",
@@ -122,6 +135,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".php": {
 		Name:              "PHP",
@@ -129,6 +143,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".swift": {
 		Name:              "Swift",
@@ -136,6 +151,8 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\""},
+		NestedComments:    true,
 	},
 	".kt": {
 		Name:              "Kotlin",
@@ -143,6 +160,8 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\""},
+		NestedComments:    true,
 	},
 	".rs": {
 		Name:              "Rust",
@@ -150,6 +169,8 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\""},
+		NestedComments:    true,
 	},
 	".scala": {
 		Name:              "Scala",
@@ -157,6 +178,7 @@ var Languages = map[string]*Language{
 		SingleLineComment: "//",
 		MultiLineStart:    "/*",
 		MultiLineEnd:      "*/",
+		StringDelimiters:  []string{"\"", "'"},
 	},
 	".json": {
 		Name:              "JSON",
